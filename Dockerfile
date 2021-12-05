@@ -1,17 +1,12 @@
 FROM node:alpine
 
-LABEL maintainer="Putri Nurifa Firdausia <putrinurifa818@gmail.com>"
+LABEL maintainer="Putri Nurifa Firdausia <putri@gmail.com>"
 
-FROM node:11.4.0-alpine
+RUN apk update && apk add ca-certificates && update-ca-certificates
 
+RUN mkdir /app
+ADD . /app
 WORKDIR /app
 
-COPY package.json /app
-
 RUN npm install
-
-COPY . /app
-
-CMD [“node”, “app.js”]
-
-EXPOSE 3000
+CMD npm start
