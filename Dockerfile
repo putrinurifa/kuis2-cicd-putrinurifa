@@ -2,11 +2,16 @@ FROM node:alpine
 
 LABEL maintainer="Putri Nurifa Firdausia <putrinurifa818@gmail.com>"
 
-RUN apk update && apk add ca-certificates && update-ca-certificates
+FROM node:11.4.0-alpine
 
-RUN mkdir /app
-ADD . /app
 WORKDIR /app
 
+COPY package.json /app
+
 RUN npm install
-CMD npm start
+
+COPY . /app
+
+CMD [“node”, “app.js”]
+
+EXPOSE 3000
