@@ -20,16 +20,27 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: CD
         run: echo 'CD is Disabled (Check workflow comment for the code).'
-      - name: Deploy using ssh
-        uses: appleboy/ssh-action@master
+
+      - name: 'Login to Dockerhub'
+        uses: docker/login-action@v1
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.PRIVATE_KEY }}
-          port: 22
-          script: |
-            cd ~/apps/ga-ci-cd-nodejs
-            git pull origin master
-            git status
-            npm install --only=prod
-            pm2 restart YoutubeApp
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 'Build and push'
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/kuis2-putrinurifa .
+          docker push ${{ secrets.DOCKERHUB_USERNAME}}/kuis2-putrinurifa
+      # - name: Deploy using ssh
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     key: ${{ secrets.PRIVATE_KEY }}
+      #     port: 22
+      #     script: |
+      #       cd ~/apps/ga-ci-cd-nodejs
+      #       git pull origin master
+      #       git status
+      #       npm install --only=prod
+      #       pm2 restart YoutubeApp
